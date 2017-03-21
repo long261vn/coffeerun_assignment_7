@@ -46,6 +46,33 @@
         });
     };
 
+    // Silver Challenge: Custom Validation for Decaf
+    // Add another function to your Validation module. It should accept two arguments: a string and an
+    // integer. If the string contains the word “decaf” and the integer is greater than 20, the function should return false.
+    // Add listeners for the coffee order text field and for the caffeine strength slider. Trigger the custom
+    // validation for whichever field is currently being edited and caused the validation failure.
+
+    FormHandler.prototype.addDecafHandler = function(fn) {
+        this.$formElement.on('change', '[name="strength"]', function(event) {
+            var coffee;
+            var data = {};
+            var message = 'Decaf strength can not more than 20';
+            this.$formElement.serializeArray().forEach(function(item) {
+                if (item.name === 'coffee' || item.name === 'strength') {
+                    data[item.name] = item.value;
+                }
+            });
+            if (fn(data.coffee, data.strength)) {
+                if (coffee) {
+                    coffee.setCustomValidity('');
+                }
+                event.target.setCustomValidity('');
+            } else {
+                event.target.setCustomValidity(message);
+            }
+        }.bind(this));
+    };
+
     App.FormHandler = FormHandler;
     window.App = App;
 })(window);
